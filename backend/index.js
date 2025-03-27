@@ -124,9 +124,7 @@ app.get('/itemdata', async (req, res) => {
 })
 app.get('/winner', async (req, res) => {
     try {
-        console.log('A');
         const latestWinner = await winnerModel.findOne().sort({ date: -1 });
-        console.log('latestWinner', latestWinner);
         if (!latestWinner) {
             return res.status(404).json({ message: "No winner has been declared yet." });
         }
@@ -136,6 +134,14 @@ app.get('/winner', async (req, res) => {
         res.status(500).json({ message: "An error occurred" });
     }
 });
+app.get('/winners', async(req, res)=>{
+    try{
+        const Winners = await winnerModel.find();
+        res.status(200).json({ winners: Winners });
+    }catch(e){
+        console.log(e);
+    }
+})
 app.get('/showorders', async(req, res)=>{
     try{
         const today = new Date();
