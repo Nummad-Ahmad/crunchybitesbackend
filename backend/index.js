@@ -7,7 +7,7 @@ const itemModel = require('./models/items');
 const winnerModel = require('./models/winner');
 const orderModel = require('./models/order');
 const bcrypt = require('bcrypt');
-const { sendVerificationCode } = require('./email');
+const { sendVerificationCode, sendQRCode } = require('./email');
 const mongoURI = 'mongodb://localhost:27017/users';
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
@@ -15,6 +15,7 @@ const moment = require("moment");
 const cron = require("node-cron");
 const http = require("http"); 
 const { Server } = require("socket.io");
+const QRCode = require("qrcode");
 
 dotenv.config();
 const app = express();
@@ -72,17 +73,24 @@ async function declareWinner() {
             isVerified: false,
             date: new Date(),
         });
-        await sendVerificationCode(highestEmail, `Congrats ${winnerUser.name}. You won this months lucky draw. Your verification code is ${verificationCode}. Don't share it with others. Reach us for more details`, "Lucky draw won");
+        const qrData = JSON.stringify({ email: highestEmail, verificationCode });
+        const qrCodeUrl = await QRCode.toDataURL(qrData);
+        await sendQRCode(
+            highestEmail,
+            `Congrats ${winnerUser.name}. You have won this month's lucky draw. Get this QR code scanned by us and claim you reward. Reach us for more details.`,
+            "Lucky draw won",
+            qrCodeUrl 
+        );
     } catch (error) {
     }
 }
-cron.schedule("59 23 * * *", async () => {
+cron.schedule("56 10 * * *", async () => {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
-    if (tomorrow.getDate() == 1) {
+    // if (tomorrow.getDate() == 1) {
         await declareWinner();
-    }
+    // }
 }, {
     timezone: "Asia/Karachi"
 });
@@ -287,6 +295,32 @@ app.post('/updateitem', async (req, res) => {
         res.status(500).json({ message: "An error occurred" });
     }
 })
+app.post('/updatewinner', async (req, res) => {
+    const { email, verificationCode } = req.body;
+    try {
+        const existingWinner = await winnerModel.findOne({ email, verificationCode });
+
+        if (existingWinner.isVerified) {
+            return res.status(400).json({ error: "Reward already claimed." });
+        }
+        const winner = await winnerModel.findOneAndUpdate(
+            { email, verificationCode },
+            { $set: { isVerified: true } },
+            { new: true }
+        );
+
+        if (!winner) {
+            return res.status(400).json({ error: "Verification failed. Please try again." });
+        }
+
+        res.status(200).json({ message: "Winner verified successfully!" });
+    } catch (error) {
+        console.error("Error updating winner:", error);
+        res.status(500).json({ error: "An error occurred while processing your request." });
+    }
+});
+
+
 
 mongoose.connect(mongoURI).then(console.log("Connected")).catch(e => {
     console.log(e);

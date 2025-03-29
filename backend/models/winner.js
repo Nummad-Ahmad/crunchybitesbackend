@@ -4,7 +4,7 @@ const winnerSchema = new mongoose.Schema({
     email: String,
     name: String,
     orders: Number,
-    verificationCode: Number,
+    verificationCode: String,
     isVerified: Boolean,
     date: Date,
 });
