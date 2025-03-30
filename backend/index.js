@@ -99,6 +99,15 @@ cron.schedule("43 14 * * *", async () => {
 app.get('/', async(req, res) => {
     res.send('Backend deployed')
 })
+app.get("/declareWinner", async (req, res) => {
+    try {
+        await declareWinner();
+        res.json({ message: "Winner declared successfully!" });
+    } catch (error) {
+        console.error("Error declaring winner:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 app.get('/data', async (req, res) => {
     const { email, date } = req.query;
     const startDate = moment(date, "YYYY-MM-DD").startOf("month").toDate();
