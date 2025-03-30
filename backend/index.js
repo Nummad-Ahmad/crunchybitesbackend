@@ -84,7 +84,7 @@ async function declareWinner() {
     } catch (error) {
     }
 }
-cron.schedule("40 14 * * *", async () => {
+cron.schedule("43 14 * * *", async () => {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
