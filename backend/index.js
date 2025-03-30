@@ -241,7 +241,7 @@ app.post('/forgotpassword', async (req, res) => {
         const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
         user.verificationCode = verificationCode;
         await user.save();
-        await sendVerificationCode(email, verificationCode);
+        await sendVerificationCode(email, `Verify your email to change password. Your verification code is ${verificationCode}.`, "Verify your email");
         return res.status(200).json({ message: 'Check your email for an OTP!' });
     } catch (error) {
         return res.status(500).json({ error: 'Server error. Please try again later.' });
