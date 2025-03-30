@@ -84,24 +84,30 @@ async function declareWinner() {
     } catch (error) {
     }
 }
-cron.schedule("43 14 * * *", async () => {
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-    // if (tomorrow.getDate() == 1) {
-        await declareWinner();
-    // }
-}, {
-    timezone: "Asia/Karachi"
-});
+// cron.schedule("43 14 * * *", async () => {
+//     const today = new Date();
+//     const tomorrow = new Date(today);
+//     tomorrow.setDate(today.getDate() + 1);
+//     if (tomorrow.getDate() == 1) {
+//         await declareWinner();
+//     }
+// }, {
+//     timezone: "Asia/Karachi"
+// });
 
 
 app.get('/', async(req, res) => {
     res.send('Backend deployed')
 })
 app.get("/declareWinner", async (req, res) => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    
     try {
-        await declareWinner();
+        if (tomorrow.getDate() == 1) {
+            await declareWinner();
+        }
         res.json({ message: "Winner declared successfully!" });
     } catch (error) {
         console.error("Error declaring winner:", error);
