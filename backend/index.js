@@ -8,7 +8,7 @@ const winnerModel = require('./models/winner');
 const orderModel = require('./models/order');
 const bcrypt = require('bcrypt');
 const { sendVerificationCode, sendQRCode } = require('./email');
-const mongoURI = 'mongodb://localhost:27017/users';
+const mongoURI = 'mongodb+srv://nummad:zfjektln@cluster0.qllkfkv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const moment = require("moment");
@@ -84,13 +84,13 @@ async function declareWinner() {
     } catch (error) {
     }
 }
-cron.schedule("56 10 * * *", async () => {
+cron.schedule("59 23 * * *", async () => {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
-    // if (tomorrow.getDate() == 1) {
+    if (tomorrow.getDate() == 1) {
         await declareWinner();
-    // }
+    }
 }, {
     timezone: "Asia/Karachi"
 });
@@ -322,9 +322,9 @@ app.post('/updatewinner', async (req, res) => {
 
 
 
-mongoose.connect(mongoURI).then(console.log("Connected")).catch(e => {
-    console.log(e);
-})
+mongoose.connect(mongoURI)
+    .then(() => console.log("DB Connected"))
+    .catch(err => console.log('err', err));
 
 app.listen(port, () => {
     console.log('server started', port);
