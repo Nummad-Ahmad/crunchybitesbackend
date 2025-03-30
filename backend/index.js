@@ -84,13 +84,13 @@ async function declareWinner() {
     } catch (error) {
     }
 }
-cron.schedule("59 23 * * *", async () => {
+cron.schedule("40 14 * * *", async () => {
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
-    if (tomorrow.getDate() == 1) {
+    // if (tomorrow.getDate() == 1) {
         await declareWinner();
-    }
+    // }
 }, {
     timezone: "Asia/Karachi"
 });
