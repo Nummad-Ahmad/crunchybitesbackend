@@ -11,7 +11,7 @@ const { sendVerificationCode, sendQRCode } = require('./email');
 const mongoURI = 'mongodb+srv://nummad:zfjektln@cluster0.qllkfkv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const moment = require("moment");
+const moment = require("moment-timezone");
 const cron = require("node-cron");
 const http = require("http");
 const { Server } = require("socket.io");
