@@ -13,13 +13,13 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const moment = require("moment");
 const cron = require("node-cron");
-const http = require("http"); 
+const http = require("http");
 const { Server } = require("socket.io");
 const QRCode = require("qrcode");
 
 dotenv.config();
 const app = express();
-const server = http.createServer(app); 
+const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
 const port = 3000;
 
@@ -79,7 +79,7 @@ async function declareWinner() {
             highestEmail,
             `Congrats ${winnerUser.name}. You have won this month's lucky draw. Get this QR code scanned by us and claim you reward. Reach us for more details.`,
             "Lucky draw won",
-            qrCodeUrl 
+            qrCodeUrl
         );
     } catch (error) {
     }
@@ -96,16 +96,15 @@ async function declareWinner() {
 // });
 
 
-app.get('/', async(req, res) => {
+app.get('/', async (req, res) => {
     res.send('Backend deployed')
 })
 app.get("/declareWinner", async (req, res) => {
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-    
+    const today = moment().tz("Asia/Karachi");
+    const tomorrow = today.clone().add(1, "day");
+
     try {
-        if (tomorrow.getDate() == 1) {
+        if (tomorrow.date() === 1) {
             await declareWinner();
         }
         res.json({ message: "Winner declared successfully!" });
@@ -157,24 +156,24 @@ app.get('/winner', async (req, res) => {
         res.status(500).json({ message: "An error occurred" });
     }
 });
-app.get('/winners', async(req, res)=>{
-    try{
+app.get('/winners', async (req, res) => {
+    try {
         const Winners = await winnerModel.find();
         res.status(200).json({ winners: Winners });
-    }catch(e){
+    } catch (e) {
         console.log(e);
     }
 })
-app.get('/showorders', async(req, res)=>{
-    try{
+app.get('/showorders', async (req, res) => {
+    try {
         const today = new Date();
-        const startOfDay = new Date(today.setHours(0, 0, 0, 0)); 
-        const endOfDay = new Date(today.setHours(23, 59, 59, 999)); 
+        const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+        const endOfDay = new Date(today.setHours(23, 59, 59, 999));
         const orderData = await orderModel.find({
-            date: { $gte: startOfDay, $lte: endOfDay } 
+            date: { $gte: startOfDay, $lte: endOfDay }
         });
         res.status(200).json({ data: orderData });
-    }catch(e){
+    } catch (e) {
         console.log(e);
     }
 })
