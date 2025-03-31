@@ -102,11 +102,11 @@ app.get('/', async (req, res) => {
 app.get("/declareWinner", async (req, res) => {
     const today = moment().tz("Asia/Karachi");
     const tomorrow = today.clone().add(1, "day");
-
+    console.log("Yes");
     try {
-        // if (tomorrow.date() === 1) {
+        if (tomorrow.date() === 1) {
             await declareWinner();
-        // }
+        }
         res.json({ message: "Winner declared successfully!" });
     } catch (error) {
         console.error("Error declaring winner:", error);
