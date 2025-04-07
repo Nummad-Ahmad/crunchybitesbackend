@@ -267,7 +267,7 @@ app.post('/verifyforgotpassword', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await userModel.findOneAndUpdate(
             { email, verificationCode },
-            { $set: { password: hashedPassword }, $unset: { verificationCode: "" } },
+            { $set: { password: hashedPassword, isVerified: true}, $unset: { verificationCode: "" } },
             { new: true }
         );
         if (!user) {
