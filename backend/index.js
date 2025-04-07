@@ -207,7 +207,7 @@ app.post('/signup', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
         const newUser = await userModel.create({ email, password: hashedPassword, name, isVerified: false, verificationCode, orders: 0, wins: 0 });
-        await sendVerificationCode(email, `Verify your email to get started. Your verification code is ${verificationCode}.`, "Verify your email");
+        await sendVerificationCode(email, `Verify your email to get started. Your verification code is ${verificationCode}. Verify now to order and win exciting prizes.`, "Verify your email");
         res.status(201).json(newUser);
     } catch (error) {
         console.error('Error:', error);
