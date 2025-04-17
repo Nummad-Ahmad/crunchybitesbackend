@@ -27,7 +27,7 @@ const sendQRCode = async (email, content, subject, qrCodeUrl) => {
                 {
                     filename: "qrcode.png",
                     path: qrCodeUrl,
-                    cid: "qrcode", // Content ID for embedding the image
+                    cid: "qrcode", 
                 },
             ],
         });
