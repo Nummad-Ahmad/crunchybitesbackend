@@ -10,17 +10,11 @@ const bcrypt = require('bcrypt');
 const { sendVerificationCode, sendQRCode } = require('./email');
 const mongoURI = 'mongodb+srv://nummad:zfjektln@cluster0.qllkfkv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 require('dotenv').config();
-const jwt = require('jsonwebtoken');
 const moment = require("moment-timezone");
-const cron = require("node-cron");
-const http = require("http");
-const { Server } = require("socket.io");
 const QRCode = require("qrcode");
 
 dotenv.config();
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
 const port = 3000;
 
 const corsOptions = {
