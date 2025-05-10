@@ -16,6 +16,15 @@ const cron = require("node-cron");
 const http = require("http");
 const { Server } = require("socket.io");
 const QRCode = require("qrcode");
+const rateLimit = require('express-rate-limit');
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 1, // Limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again after 15 minutes.",
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false,  // Disable the `X-RateLimit-*` headers
+});
 
 dotenv.config();
 const app = express();
@@ -31,6 +40,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(limiter);
+
 
 async function declareWinner() {
     const today = moment().format("YYYY-MM-DD");
