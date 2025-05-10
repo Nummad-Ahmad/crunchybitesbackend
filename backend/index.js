@@ -24,8 +24,7 @@ const io = new Server(server, { cors: { origin: "*" } });
 const port = 3000;
 
 const corsOptions = {
-    // origin: process.env.REACT_APP_FRONT_END || 'http://localhost:3002', 
-    origin: '*',
+    origin: "https://crunchy-bites.vercel.app/", 
     methods: ["GET", "POST", "PUT", "DELETE"],
 };
 
