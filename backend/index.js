@@ -18,7 +18,7 @@ const app = express();
 const port = 3000;
 
 const corsOptions = {
-    origin: "https://crunchy-bites.vercel.app/", 
+    origin: "*", 
     methods: ["GET", "POST", "PUT", "DELETE"],
 };
 
