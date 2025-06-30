@@ -227,7 +227,7 @@ app.post('/login', async (req, res) => {
                 id: existingUser._id,
                 email: existingUser.email,
             },
-            "process.env.JWT_SECRET",
+            "SECRET!@#",
             { expiresIn: '7d' }
         );
         console.log(existingUser)
