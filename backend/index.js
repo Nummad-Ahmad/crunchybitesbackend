@@ -34,7 +34,7 @@ const verifyToken = (req, res, next) => {
     if (!token) return res.status(401).json({ error: 'No token found' });
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded = jwt.verify(token, 'SECRET!@#');
         req.user = decoded;
         next();
     } catch {
@@ -234,7 +234,7 @@ app.post('/login', async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: true,
-            sameSite: 'Lax',
+            sameSite: 'None',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
         const { password: _, verificationCode, ...safeUser } = existingUser.toObject();
