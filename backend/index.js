@@ -375,14 +375,14 @@ app.post('/updateitem', verifyToken, async (req, res) => {
 });
 
 app.post('/updatewinner', verifyToken, async (req, res) => {
-    const { verificationCode } = req.body;
+    const { verificationCode, winnerEmail } = req.body;
     const email = req.user.email; // Securely retrieved from JWT
     if (email !== 'nummad222@gmail.com') {
         return res.status(403).json({ error: "Forbidden" });
     }
 
     try {
-        const existingWinner = await winnerModel.findOne({ email, verificationCode });
+        const existingWinner = await winnerModel.findOne({ email: winnerEmail, verificationCode });
 
         if (!existingWinner) {
             return res.status(400).json({ error: "Verification failed. Please try again." });
@@ -393,7 +393,7 @@ app.post('/updatewinner', verifyToken, async (req, res) => {
         }
 
         const winner = await winnerModel.findOneAndUpdate(
-            { email, verificationCode },
+            { email: winnerEmail, verificationCode },
             { $set: { isVerified: true } },
             { new: true }
         );
