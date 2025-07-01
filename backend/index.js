@@ -34,7 +34,7 @@ const verifyToken = (req, res, next) => {
     if (!token) return res.status(401).json({ error: 'No token found' });
 
     try {
-        const decoded = jwt.verify(token, 'SECRET!@#');
+        const decoded = jwt.verify(token, 'zFjEkTlN');
         req.user = decoded;
         next();
     } catch {
@@ -227,7 +227,7 @@ app.post('/login', async (req, res) => {
                 id: existingUser._id,
                 email: existingUser.email,
             },
-            "SECRET!@#",
+            "zFjEkTlN",
             { expiresIn: '7d' }
         );
         console.log(existingUser)
