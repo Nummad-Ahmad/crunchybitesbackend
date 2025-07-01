@@ -356,6 +356,9 @@ app.post('/order', verifyToken, async (req, res) => {
 
 app.post('/updateitem', verifyToken, async (req, res) => {
     const { name, price } = req.body;
+    if (req.user.email !== 'nummad222@gmail.com') {
+        return res.status(403).json({ error: "Forbidden" });
+    }
 
     try {
         const updatedItem = await itemModel.findOneAndUpdate(
@@ -374,6 +377,9 @@ app.post('/updateitem', verifyToken, async (req, res) => {
 app.post('/updatewinner', verifyToken, async (req, res) => {
     const { verificationCode } = req.body;
     const email = req.user.email; // Securely retrieved from JWT
+    if (email !== 'nummad222@gmail.com') {
+        return res.status(403).json({ error: "Forbidden" });
+    }
 
     try {
         const existingWinner = await winnerModel.findOne({ email, verificationCode });
