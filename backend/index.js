@@ -14,7 +14,6 @@ const moment = require("moment-timezone");
 const QRCode = require("qrcode");
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-const redis = require('./redisClient');
 
 dotenv.config();
 const app = express();
@@ -166,43 +165,24 @@ app.get('/customerdata', verifyToken, async (req, res) => {
 
 app.get('/itemdata', async (req, res) => {
     try {
-        const cachedItemData = await redis.get('item_data');
-        if (cachedItemData) {
-            return res.status(200).json({ data: JSON.parse(cachedItemData) });
-        }
-
         const itemData = await itemModel.find();
-        await redis.set('item_data', JSON.stringify(itemData), 'EX', 300); // 5 min
-
         res.status(200).json({ data: itemData });
     } catch (e) {
         res.status(500).json({ message: "An error occurred" });
     }
-});
-
+})
 app.get('/winner', async (req, res) => {
     try {
-        const cachedWinner = await redis.get('latest_winner');
-
-        if (cachedWinner) {
-            return res.status(200).json({ winner: JSON.parse(cachedWinner) });
-        }
-
         const latestWinner = await winnerModel.findOne().sort({ date: -1 });
-
         if (!latestWinner) {
             return res.status(404).json({ message: "No winner has been declared yet." });
         }
-
-        await redis.set('latest_winner', JSON.stringify(latestWinner), 'EX', 300); // 5 min
-
         res.status(200).json({ winner: latestWinner });
     } catch (error) {
         console.error("Error fetching latest winner:", error);
         res.status(500).json({ message: "An error occurred" });
     }
 });
-
 app.get('/winners', async (req, res) => {
     try {
         const Winners = await winnerModel.find();
