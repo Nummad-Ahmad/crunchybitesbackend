@@ -352,8 +352,8 @@ app.post('/order', verifyToken, async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        const orderNumber = await generateOrderNumber(); // 🔁 new method
-
+        const orderNumber = await generateOrderNumber(); 
+        console.log('orderNumber', orderNumber);
         const newOrder = await orderModel.create({
             sender: email,
             date,
