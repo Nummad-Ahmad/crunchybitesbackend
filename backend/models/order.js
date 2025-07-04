@@ -9,8 +9,6 @@ const orderSchema = new mongoose.Schema({
     price: Number,
     orderNumber: {
         type: String,
-        required: true,
-        unique: true,
     }
 
 });
