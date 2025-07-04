@@ -7,6 +7,12 @@ const orderSchema = new mongoose.Schema({
     items: Object,
     total: Number,
     price: Number,
+    orderNumber: {
+        type: String,
+        required: true,
+        unique: true,
+    }
+
 });
 
 

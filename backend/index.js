@@ -14,6 +14,9 @@ const moment = require("moment-timezone");
 const QRCode = require("qrcode");
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const counterModel = require('./models/counter');
+
+
 
 dotenv.config();
 const app = express();
@@ -28,6 +31,17 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
+
+const generateOrderNumber = async () => {
+    const counter = await counterModel.findOneAndUpdate(
+        { name: 'order' },
+        { $inc: { seq: 1 } },
+        { new: true, upsert: true }
+    );
+
+    const padded = String(counter.seq).padStart(2, '0');
+    return `CB-${padded}`;
+};
 
 const verifyToken = (req, res, next) => {
     const token = req.cookies.token;
@@ -324,7 +338,7 @@ app.post('/verifyforgotpassword', async (req, res) => {
 });
 app.post('/order', verifyToken, async (req, res) => {
     const { date, items, price, time } = req.body;
-    const email = req.user.email; // Extracted from JWT — secure & trusted
+    const email = req.user.email;
     const sum = items.samosa + items.fries + items.cheesyFries + items.roll;
 
     try {
@@ -338,21 +352,29 @@ app.post('/order', verifyToken, async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
+        const orderNumber = await generateOrderNumber(); // 🔁 new method
+
         const newOrder = await orderModel.create({
             sender: email,
             date,
             items,
             total: sum,
             price,
-            time
+            time,
+            orderNumber
         });
 
-        res.status(201).json({ message: "Ordered successfully" });
+        res.status(201).json({
+            message: "Ordered successfully",
+            orderNumber
+        });
+
     } catch (e) {
         console.error("Order error:", e);
         res.status(500).json({ error: 'An error occurred while processing your request' });
     }
 });
+
 
 app.post('/updateitem', verifyToken, async (req, res) => {
     const { name, price } = req.body;
