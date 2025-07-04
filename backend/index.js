@@ -32,16 +32,27 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
+// Place this where you define helper functions (already in your server)
 const generateOrderNumber = async () => {
-    const counter = await counterModel.findOneAndUpdate(
-        { name: 'order' },
-        { $inc: { seq: 1 } },
-        { new: true, upsert: true }
-    );
+    try {
+        const counter = await counterModel.findOneAndUpdate(
+            { name: 'order' },
+            { $inc: { seq: 1 } },
+            {
+                new: true,
+                upsert: true,
+                setDefaultsOnInsert: true
+            }
+        );
 
-    const padded = String(counter.seq).padStart(2, '0');
-    return `CB-${padded}`;
+        const padded = String(counter.seq).padStart(2, '0');
+        return `CB-${padded}`;
+    } catch (err) {
+        console.error("❌ Error generating order number:", err);
+        return 'CB-ERR';
+    }
 };
+
 
 const verifyToken = (req, res, next) => {
     const token = req.cookies.token;
