@@ -7,5 +7,5 @@ const counterSchema = new mongoose.Schema({
   }
 });
 
-const counterModel = mongoose.model('counter', counterSchema);
+const counterModel = mongoose.model('counters', counterSchema);
 module.exports = counterModel;
