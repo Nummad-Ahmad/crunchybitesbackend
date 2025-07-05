@@ -31,28 +31,16 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
-
 const generateOrderNumber = async () => {
     try {
-        // Find or create the counter
         const counter = await counterModel.findOneAndUpdate(
-            { name: 'order' },
-            {}, // no update yet
-            { new: true, upsert: true, setDefaultsOnInsert: true }
+            {},  
+            { $inc: { order: 1 } },
+            { new: true, upsert: true }
         );
 
-        // Extract current number from "CB-XX"
-        const currentOrder = counter.orders || 'CB-00';
-        const currentNum = parseInt(currentOrder.split('-')[1]) || 0;
-        const nextNum = currentNum + 1;
-        const padded = String(nextNum).padStart(2, '0');
-        const newOrder = `CB-${padded}`;
-
-        // Save the new value back to DB
-        counter.orders = newOrder;
-        await counter.save();
-
-        return newOrder;
+        const padded = String(counter.order).padStart(2, '0');
+        return `CB-${padded}`;
     } catch (err) {
         console.error("❌ Error generating order number:", err);
         return 'CB-ERR';
@@ -393,14 +381,13 @@ app.post('/order', verifyToken, async (req, res) => {
     }
 });
 app.get('/init-counter', async (req, res) => {
-    try {
-        await counterModel.create({ name: 'order', orders: 'CB-00' });
-        res.send('Counter initialized');
-    } catch (e) {
-        res.send('Counter already exists or failed');
-    }
+  try {
+    await counterModel.create({ name: 'order', seq: 0 });
+    res.send('Counter initialized');
+  } catch (e) {
+    res.send('Counter already exists or failed');
+  }
 });
-
 
 
 app.post('/updateitem', verifyToken, async (req, res) => {
