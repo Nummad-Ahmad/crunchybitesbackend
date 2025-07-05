@@ -348,7 +348,7 @@ app.post('/order', verifyToken, async (req, res) => {
     const email = req.user.email;
     const sum = items.samosa + items.fries + items.cheesyFries + items.roll;
 
-    try {
+    try {    
         const counter = await counterModel.findOneAndUpdate(
             {},
             { $inc: { order: 1 } },
