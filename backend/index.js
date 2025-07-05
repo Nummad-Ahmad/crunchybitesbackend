@@ -354,6 +354,7 @@ app.post('/order', verifyToken, async (req, res) => {
             { $inc: { order: 1 } },
             { new: true, upsert: true }
         );
+        console.log('counter', counter)
         const orderNumber = `CB-${String(counter.order).padStart(2, '0')}`;
         const updatedUser = await userModel.findOneAndUpdate(
             { email },
