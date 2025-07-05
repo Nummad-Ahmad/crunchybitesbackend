@@ -39,8 +39,9 @@ const generateOrderNumber = async () => {
             { new: true, upsert: true }
         );
 
-        const padded = String(counter.order).padStart(2, '0');
-        return `CB-${padded}`;
+        // const padded = String(counter.order).padStart(2, '0');
+        // return `CB-${padded}`;
+        return counter.order
     } catch (err) {
         console.error("❌ Error generating order number:", err);
         return 'CB-ERR';
