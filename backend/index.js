@@ -34,7 +34,7 @@ app.use(cookieParser());
 const generateOrderNumber = async () => {
     try {
         const counter = await counterModel.findOneAndUpdate(
-            {},  
+            {},
             { $inc: { order: 1 } },
             { new: true, upsert: true }
         );
@@ -349,6 +349,12 @@ app.post('/order', verifyToken, async (req, res) => {
     const sum = items.samosa + items.fries + items.cheesyFries + items.roll;
 
     try {
+        const counter = await counterModel.findOneAndUpdate(
+            {},
+            { $inc: { order: 1 } },
+            { new: true, upsert: true }
+        );
+        const orderNumber = `CB-${String(counter.order).padStart(2, '0')}`;
         const updatedUser = await userModel.findOneAndUpdate(
             { email },
             { $inc: { orders: 1 } },
@@ -358,9 +364,6 @@ app.post('/order', verifyToken, async (req, res) => {
         if (!updatedUser) {
             return res.status(404).json({ error: 'User not found' });
         }
-
-        const orderNumber = await generateOrderNumber(); 
-        console.log('orderNumber', orderNumber);
         const newOrder = await orderModel.create({
             sender: email,
             date,
@@ -382,12 +385,12 @@ app.post('/order', verifyToken, async (req, res) => {
     }
 });
 app.get('/init-counter', async (req, res) => {
-  try {
-    await counterModel.create({ order: 0 });
-    res.send('Counter initialized');
-  } catch (e) {
-    res.send('Counter already exists or failed');
-  }
+    try {
+        await counterModel.create({ order: 0 });
+        res.send('Counter initialized');
+    } catch (e) {
+        res.send('Counter already exists or failed');
+    }
 });
 
 
