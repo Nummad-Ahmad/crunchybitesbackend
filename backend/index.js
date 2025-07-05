@@ -32,26 +32,33 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
-// Place this where you define helper functions (already in your server)
 const generateOrderNumber = async () => {
     try {
+        // Find or create the counter
         const counter = await counterModel.findOneAndUpdate(
             { name: 'order' },
-            { $inc: { seq: 1 } },
-            {
-                new: true,
-                upsert: true,
-                setDefaultsOnInsert: true
-            }
+            {}, // no update yet
+            { new: true, upsert: true, setDefaultsOnInsert: true }
         );
 
-        const padded = String(counter.seq).padStart(2, '0');
-        return `CB-${padded}`;
+        // Extract current number from "CB-XX"
+        const currentOrder = counter.orders || 'CB-00';
+        const currentNum = parseInt(currentOrder.split('-')[1]) || 0;
+        const nextNum = currentNum + 1;
+        const padded = String(nextNum).padStart(2, '0');
+        const newOrder = `CB-${padded}`;
+
+        // Save the new value back to DB
+        counter.orders = newOrder;
+        await counter.save();
+
+        return newOrder;
     } catch (err) {
         console.error("❌ Error generating order number:", err);
         return 'CB-ERR';
     }
 };
+
 
 
 const verifyToken = (req, res, next) => {
