@@ -393,13 +393,14 @@ app.post('/order', verifyToken, async (req, res) => {
     }
 });
 app.get('/init-counter', async (req, res) => {
-  try {
-    await counterModel.create({ name: 'order', seq: 0 });
-    res.send('Counter initialized');
-  } catch (e) {
-    res.send('Counter already exists or failed');
-  }
+    try {
+        await counterModel.create({ name: 'order', orders: 'CB-00' });
+        res.send('Counter initialized');
+    } catch (e) {
+        res.send('Counter already exists or failed');
+    }
 });
+
 
 
 app.post('/updateitem', verifyToken, async (req, res) => {
