@@ -116,16 +116,6 @@ async function declareWinner() {
     } catch (error) {
     }
 }
-// cron.schedule("43 14 * * *", async () => {
-//     const today = new Date();
-//     const tomorrow = new Date(today);
-//     tomorrow.setDate(today.getDate() + 1);
-//     if (tomorrow.getDate() == 1) {
-//         await declareWinner();
-//     }
-// }, {
-//     timezone: "Asia/Karachi"
-// });
 
 
 app.get('/', async (req, res) => {
@@ -151,6 +141,7 @@ app.get("/declareWinner", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
 app.get('/data', verifyToken, async (req, res) => {
     const { date } = req.query;
 
@@ -348,7 +339,7 @@ app.post('/order', verifyToken, async (req, res) => {
     const email = req.user.email;
     const sum = items.samosa + items.fries + items.cheesyFries + items.roll;
 
-    try {    
+    try {
         const counter = await counterModel.findOneAndUpdate(
             {},
             { $inc: { order: 1 } },
@@ -413,6 +404,44 @@ app.post('/updateitem', verifyToken, async (req, res) => {
     } catch (e) {
         console.error("Item update error:", e);
         res.status(500).json({ message: "An error occurred" });
+    }
+});
+
+app.post('/discount', async (req, res) => {
+    const today = moment().tz("Asia/Karachi");
+    const tomorrowDate = today.clone().add(1, "day").date();
+    const discountMap = {
+        9: { name: 'fries', price: 70 },
+        18: { name: 'cheesyFries', price: 160 },
+        27: { name: 'chocoMilk', price: 160 }
+    };
+
+    const discount = discountMap[tomorrowDate];
+
+    try {
+        if (discount) {
+            const updatedItem = await itemModel.findOneAndUpdate(
+                { name: discount.name },
+                { price: discount.price },
+                { new: true }
+            );
+            if (updatedItem) {
+                return res.status(200).json({
+                    message: `✅ ${discount.name} price updated to ${discount.price}`
+                });
+            } else {
+                return res.status(404).json({
+                    message: `❌ Item '${discount.name}' not found`
+                });
+            }
+        } else {
+            return res.status(200).json({
+                message: "ℹ️ No discounts scheduled for tomorrow"
+            });
+        }
+    } catch (e) {
+        console.error("Item update error:", e);
+        return res.status(500).json({ message: "❌ Server error. Try again later." });
     }
 });
 
