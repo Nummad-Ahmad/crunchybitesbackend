@@ -479,11 +479,11 @@ app.post('/reset', async (req, res) => {
 
         if (resetItem) {
             return res.status(200).json({
-                message: `🔁 '${itemToReset}' price reset to original: ${originalPrice}`
+                message: `Price reset`
             });
         } else {
             return res.status(404).json({
-                message: `❌ Item '${itemToReset}' not found in database`
+                message: `Item not found in database`
             });
         }
     } catch (error) {
