@@ -445,7 +445,7 @@ app.post('/discount', async (req, res) => {
     }
 });
 
-router.post('/reset', async (req, res) => {
+app.post('/reset', async (req, res) => {
     // const discountMap = {
     //     9: { name: 'fries', price: 70 },
     //     19: { name: 'cheesyFries', price: 160 },
@@ -461,11 +461,11 @@ router.post('/reset', async (req, res) => {
     // const yesterdayDate = today.clone().subtract(1, "day").date();
     // const yesterdayDiscount = discountMap[yesterdayDate];
 
-    if (!yesterdayDiscount) {
-        return res.status(200).json({
-            message: "ℹ️ No discounts were scheduled yesterday, nothing to reset."
-        });
-    }
+    // if (!yesterdayDiscount) {
+    //     return res.status(200).json({
+    //         message: "ℹ️ No discounts were scheduled yesterday, nothing to reset."
+    //     });
+    // }
 
     // const itemToReset = yesterdayDiscount.name;
     // const originalPrice = originalPrices[itemToReset];
