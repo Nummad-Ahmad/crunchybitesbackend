@@ -412,7 +412,7 @@ app.post('/discount', async (req, res) => {
     const tomorrowDate = today.clone().add(1, "day").date();
     const discountMap = {
         9: { name: 'fries', price: 70 },
-        18: { name: 'cheesyFries', price: 160 },
+        14: { name: 'cheesyFries', price: 160 },
         27: { name: 'chocoMilk', price: 160 }
     };
 
