@@ -412,7 +412,7 @@ app.post('/discount', async (req, res) => {
     const tomorrowDate = today.clone().add(1, "day").date();
     const discountMap = {
         9: { name: 'fries', price: 70 },
-        15: { name: 'cheesyFries', price: 160 },
+        18: { name: 'cheesyFries', price: 160 },
         27: { name: 'chocoMilk', price: 160 }
     };
 
@@ -442,6 +442,55 @@ app.post('/discount', async (req, res) => {
     } catch (e) {
         console.error("Item update error:", e);
         return res.status(500).json({ message: "❌ Server error. Try again later." });
+    }
+});
+
+router.post('/reset', async (req, res) => {
+    // const discountMap = {
+    //     9: { name: 'fries', price: 70 },
+    //     19: { name: 'cheesyFries', price: 160 },
+    //     27: { name: 'chocoMilk', price: 160 }
+    // };
+
+    // const originalPrices = {
+    //     fries: 100,
+    //     cheesyFries: 200,
+    //     chocoMilk: 200
+    // };
+    // const today = moment().tz("Asia/Karachi");
+    // const yesterdayDate = today.clone().subtract(1, "day").date();
+    // const yesterdayDiscount = discountMap[yesterdayDate];
+
+    if (!yesterdayDiscount) {
+        return res.status(200).json({
+            message: "ℹ️ No discounts were scheduled yesterday, nothing to reset."
+        });
+    }
+
+    // const itemToReset = yesterdayDiscount.name;
+    // const originalPrice = originalPrices[itemToReset];
+
+    try {
+        const resetItem = await itemModel.findOneAndUpdate(
+            { name: 'cheesyFries' },
+            { price: 200 },
+            { new: true }
+        );
+
+        if (resetItem) {
+            return res.status(200).json({
+                message: `🔁 '${itemToReset}' price reset to original: ${originalPrice}`
+            });
+        } else {
+            return res.status(404).json({
+                message: `❌ Item '${itemToReset}' not found in database`
+            });
+        }
+    } catch (error) {
+        console.error("Reset error:", error);
+        return res.status(500).json({
+            message: "❌ Server error while resetting price"
+        });
     }
 });
 
