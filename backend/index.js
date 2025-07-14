@@ -408,15 +408,15 @@ app.post('/updateitem', verifyToken, async (req, res) => {
 });
 
 app.post('/discount', async (req, res) => {
-    const today = moment().tz("Asia/Karachi");
-    const tomorrowDate = today.clone().add(1, "day").date();
+    const today = moment().tz("Asia/Karachi").date();
+
     const discountMap = {
         9: { name: 'fries', price: 70 },
-        18: { name: 'cheesyFries', price: 160 },
+        14: { name: 'cheesyFries', price: 160 },
         27: { name: 'chocoMilk', price: 160 }
     };
 
-    const discount = discountMap[tomorrowDate];
+    const discount = discountMap[today];
 
     try {
         if (discount) {
@@ -446,44 +446,44 @@ app.post('/discount', async (req, res) => {
 });
 
 app.post('/reset', async (req, res) => {
-    // const discountMap = {
-    //     9: { name: 'fries', price: 70 },
-    //     19: { name: 'cheesyFries', price: 160 },
-    //     27: { name: 'chocoMilk', price: 160 }
-    // };
+    const discountMap = {
+        9: { name: 'fries', price: 70 },
+        14: { name: 'cheesyFries', price: 160 },
+        27: { name: 'chocoMilk', price: 160 }
+    };
 
-    // const originalPrices = {
-    //     fries: 100,
-    //     cheesyFries: 200,
-    //     chocoMilk: 200
-    // };
-    // const today = moment().tz("Asia/Karachi");
-    // const yesterdayDate = today.clone().subtract(1, "day").date();
-    // const yesterdayDiscount = discountMap[yesterdayDate];
+    const originalPrices = {
+        fries: 100,
+        cheesyFries: 200,
+        chocoMilk: 220
+    };
+    const today = moment().tz("Asia/Karachi").date();
 
-    // if (!yesterdayDiscount) {
-    //     return res.status(200).json({
-    //         message: "ℹ️ No discounts were scheduled yesterday, nothing to reset."
-    //     });
-    // }
+    const yesterdayDiscount = discountMap[today];
 
-    // const itemToReset = yesterdayDiscount.name;
-    // const originalPrice = originalPrices[itemToReset];
+    if (!yesterdayDiscount) {
+        return res.status(200).json({
+            message: "ℹ️ No discounts were scheduled yesterday, nothing to reset."
+        });
+    }
+
+    const itemToReset = yesterdayDiscount.name;
+    const originalPrice = originalPrices[itemToReset];
 
     try {
         const resetItem = await itemModel.findOneAndUpdate(
-            { name: 'cheesyFries' },
-            { price: 200 },
+            { name: itemToReset },
+            { price: originalPrice },
             { new: true }
         );
 
         if (resetItem) {
             return res.status(200).json({
-                message: `Price reset`
+                message: `🔁 '${itemToReset}' price reset to original: ${originalPrice}`
             });
         } else {
             return res.status(404).json({
-                message: `Item not found in database`
+                message: `❌ Item '${itemToReset}' not found in database`
             });
         }
     } catch (error) {
