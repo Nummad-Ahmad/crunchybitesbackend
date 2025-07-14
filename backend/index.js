@@ -455,7 +455,7 @@ app.post('/reset', async (req, res) => {
     const originalPrices = {
         fries: 100,
         cheesyFries: 200,
-        chocoMilk: 220
+        chocoMilk: 200
     };
     const today = moment().tz("Asia/Karachi").date();
 
