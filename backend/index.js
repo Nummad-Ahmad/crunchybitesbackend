@@ -412,7 +412,7 @@ app.post('/discount', async (req, res) => {
 
     const discountMap = {
         9: { name: 'fries', price: 70 },
-        14: { name: 'cheesyFries', price: 160 },
+        18: { name: 'cheesyFries', price: 160 },
         27: { name: 'chocoMilk', price: 160 }
     };
 
@@ -459,7 +459,7 @@ app.post('/reset', async (req, res) => {
     };
     const today = moment().tz("Asia/Karachi").date();
 
-    const yesterdayDiscount = discountMap[today];
+    const yesterdayDiscount = discountMap[today-1];
 
     if (!yesterdayDiscount) {
         return res.status(200).json({
