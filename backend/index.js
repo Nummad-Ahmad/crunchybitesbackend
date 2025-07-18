@@ -412,7 +412,7 @@ app.post('/discount', async (req, res) => {
     console.log("Dis");
     const discountMap = {
         9: { name: 'fries', price: 70 },
-        19: { name: 'cheesyFries', price: 160 },
+        18: { name: 'cheesyFries', price: 160 },
         27: { name: 'chocoMilk', price: 160 }
     };
 
