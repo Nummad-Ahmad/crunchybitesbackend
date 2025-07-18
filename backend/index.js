@@ -423,7 +423,7 @@ app.post('/discount', async (req, res) => {
             const updatedItem = await itemModel.findOneAndUpdate(
                 { name: discount.name },
                 { price: discount.price },
-                { new: true }
+                { new: true } 
             );
             if (updatedItem) {
                 return res.status(200).json({
