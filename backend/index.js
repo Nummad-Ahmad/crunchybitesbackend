@@ -408,41 +408,46 @@ app.post('/updateitem', verifyToken, async (req, res) => {
 });
 
 app.post('/discount', async (req, res) => {
-    const today = moment().tz("Asia/Karachi").date();
-    console.log("Dis");
-    const discountMap = {
-        9: { name: 'fries', price: 70 },
-        18: { name: 'cheesyFries', price: 160 },
-        27: { name: 'chocoMilk', price: 160 }
-    };
-
-    const discount = discountMap[today];
-
-    try {
-        if (discount) {
-            const updatedItem = await itemModel.findOneAndUpdate(
-                { name: discount.name },
-                { price: discount.price },
-                { new: true } 
-            );
-            if (updatedItem) {
-                return res.status(200).json({
-                    message: `✅ ${discount.name} price updated to ${discount.price}`
-                });
-            } else {
-                return res.status(404).json({
-                    message: `❌ Item '${discount.name}' not found`
-                });
-            }
-        } else {
-            return res.status(200).json({
-                message: "ℹ️ No discounts scheduled for tomorrow"
-            });
-        }
-    } catch (e) {
-        console.error("Item update error:", e);
-        return res.status(500).json({ message: "❌ Server error. Try again later." });
+    try{
+        res.status(200).json({message: "Done"})
+    }catch(e){
+        console.log(e);
     }
+    // const today = moment().tz("Asia/Karachi").date();
+    // console.log("Dis");
+    // const discountMap = {
+    //     9: { name: 'fries', price: 70 },
+    //     18: { name: 'cheesyFries', price: 160 },
+    //     27: { name: 'chocoMilk', price: 160 }
+    // };
+
+    // const discount = discountMap[today];
+
+    // try {
+    //     if (discount) {
+    //         const updatedItem = await itemModel.findOneAndUpdate(
+    //             { name: discount.name },
+    //             { price: discount.price },
+    //             { new: true } 
+    //         );
+    //         if (updatedItem) {
+    //             return res.status(200).json({
+    //                 message: `✅ ${discount.name} price updated to ${discount.price}`
+    //             });
+    //         } else {
+    //             return res.status(404).json({
+    //                 message: `❌ Item '${discount.name}' not found`
+    //             });
+    //         }
+    //     } else {
+    //         return res.status(200).json({
+    //             message: "ℹ️ No discounts scheduled for tomorrow"
+    //         });
+    //     }
+    // } catch (e) {
+    //     console.error("Item update error:", e);
+    //     return res.status(500).json({ message: "❌ Server error. Try again later." });
+    // }
 });
 
 app.post('/reset', async (req, res) => {
