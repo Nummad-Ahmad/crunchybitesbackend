@@ -121,6 +121,11 @@ async function declareWinner() {
 app.get('/', async (req, res) => {
     res.send('Backend deployed')
 })
+
+app.get('/loaderio-435401815c794f85496a663a2b33ec2b', (req, res)=>{
+    res.send('loaderio-435401815c794f85496a663a2b33ec2b');
+})
+
 app.get('/verify-token', verifyToken, async (req, res) => {
     const user = await userModel.findById(req.user.id).select('-password');
     if (!user) return res.status(404).json({ error: 'User not found' });
