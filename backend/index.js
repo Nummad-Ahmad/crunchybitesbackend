@@ -41,7 +41,7 @@ const generateOrderNumber = async () => {
 
         // const padded = String(counter.order).padStart(2, '0');
         // return `CB-${padded}`;
-        return counter.order
+        return counter.order 
     } catch (err) {
         console.error("❌ Error generating order number:", err);
         return 'CB-ERR';
@@ -453,7 +453,7 @@ app.post('/discount', async (req, res) => {
 app.post('/reset', async (req, res) => {
     const discountMap = {
         9: { name: 'fries', price: 70 },
-        19: { name: 'cheesyFries', price: 160 },
+        18: { name: 'cheesyFries', price: 160 },
         27: { name: 'chocoMilk', price: 160 }
     };
 
@@ -462,9 +462,8 @@ app.post('/reset', async (req, res) => {
         cheesyFries: 200,
         chocoMilk: 200
     };
-    const today = moment().tz("Asia/Karachi").date();
-
-    const yesterdayDiscount = discountMap[today];
+    const yesterday = moment().tz("Asia/Karachi").subtract(1, 'day').date();
+    const yesterdayDiscount = discountMap[yesterday];
 
     if (!yesterdayDiscount) {
         return res.status(200).json({
@@ -529,10 +528,6 @@ app.post('/updatewinner', verifyToken, async (req, res) => {
         res.status(500).json({ error: "An error occurred while processing your request." });
     }
 });
-
-
-
-
 mongoose.connect(mongoURI)
     .then(() => console.log("DB Connected"))
     .catch(err => console.log('err', err));
