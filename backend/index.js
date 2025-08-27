@@ -23,7 +23,7 @@ const app = express();
 const port = 3000;
 
 const corsOptions = {
-    origin: ['https://crunchy-bites.vercel.app', 'http://localhost:3001'],
+    origin: ['https://crunchy-bites.vercel.app', 'http://localhost:3000'],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 };
