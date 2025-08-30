@@ -31,24 +31,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
-const generateOrderNumber = async () => {
-    try {
-        const counter = await counterModel.findOneAndUpdate(
-            {},
-            { $inc: { order: 1 } },
-            { new: true, upsert: true }
-        );
-
-        // const padded = String(counter.order).padStart(2, '0');
-        // return `CB-${padded}`;
-        return counter.order 
-    } catch (err) {
-        console.error("❌ Error generating order number:", err);
-        return 'CB-ERR';
-    }
-};
-
-
 
 const verifyToken = (req, res, next) => {
     const token = req.cookies.token;
@@ -122,9 +104,6 @@ app.get('/', async (req, res) => {
     res.send('Backend deployed')
 })
 
-app.get('/loaderio-435401815c794f85496a663a2b33ec2b', (req, res)=>{
-    res.send('loaderio-435401815c794f85496a663a2b33ec2b');
-})
 
 app.get('/verify-token', verifyToken, async (req, res) => {
     const user = await userModel.findById(req.user.id).select('-password');
