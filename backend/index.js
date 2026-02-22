@@ -275,7 +275,13 @@ app.post('/verify', verifyToken, async (req, res) => {
             return res.status(404).json({ error: 'Invalid verification code' });
         }
 
-        res.status(200).json({ message: 'Account verified successfully' });
+        res.status(200).json({
+            message: 'Account verified successfully',
+            user: {
+                email: user.email,
+                wins: user.wins
+            }
+        });
     } catch (e) {
         console.error('Error:', e);
         res.status(500).json({ error: 'An error occurred while processing your request' });
