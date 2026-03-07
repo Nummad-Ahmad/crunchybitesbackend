@@ -60,11 +60,12 @@ router.post('/order', verifyToken, async (req, res) => {
 
 router.delete('/deleteOrders', async (req, res) => {
     try {
+
         const twoMonthsAgo = new Date();
-        twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 4);
+        twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 1);
 
         const result = await orderModel.deleteMany({
-            createdAt: { $lt: twoMonthsAgo }
+            date: { $lt: twoMonthsAgo }
         });
 
         res.json({
