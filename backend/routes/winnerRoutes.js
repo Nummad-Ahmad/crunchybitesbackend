@@ -37,7 +37,7 @@ router.get('/declareWinner', async (req, res) => {
     const tomorrow = today.clone().add(1, "day");
 
     try {
-        if (tomorrow.date() === 1 || true) {
+        if (tomorrow.date() === 1) {
             await declareWinner();
             console.log("Winner declared successfully!");
             return res.json({ message: "Winner declared successfully!" });
