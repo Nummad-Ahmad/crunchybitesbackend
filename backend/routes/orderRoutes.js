@@ -60,7 +60,6 @@ router.post('/order', verifyToken, async (req, res) => {
 
 router.delete('/deleteOrders', async (req, res) => {
     try {
-
         const twoMonthsAgo = new Date();
         twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 4);
 
