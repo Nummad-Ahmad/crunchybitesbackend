@@ -62,7 +62,7 @@ router.delete('/deleteOrders', async (req, res) => {
     try {
 
         const twoMonthsAgo = new Date();
-        twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 1);
+        twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
 
         const result = await orderModel.deleteMany({
             date: { $lt: twoMonthsAgo }
