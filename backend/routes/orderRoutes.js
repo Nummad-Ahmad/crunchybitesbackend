@@ -58,4 +58,25 @@ router.post('/order', verifyToken, async (req, res) => {
 
 });
 
+router.delete('/deleteOrders', async (req, res) => {
+    try {
+
+        const twoMonthsAgo = new Date();
+        twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 4);
+
+        const result = await orderModel.deleteMany({
+            createdAt: { $lt: twoMonthsAgo }
+        });
+
+        res.json({
+            message: "Old orders deleted successfully",
+            deletedCount: result.deletedCount
+        });
+
+    } catch (e) {
+        console.log('error while deleting orders', e);
+        res.status(500).json({ error: "Failed to delete orders" });
+    }
+});
+
 module.exports = router;
