@@ -28,7 +28,7 @@ router.post('/deals/create', verifyToken, async (req, res) => {
     try {
         const { dealName, items, price, status, enableAt,
             expiryAt } = req.body;
-s
+
         const newDeal = await dealModel.create({
             dealName, items, price, status, enableAt,
             expiryAt
