@@ -10,6 +10,7 @@ const orderRoutes = require('./routes/orderRoutes');
 const itemRoutes = require('./routes/itemRoutes');
 const winnerRoutes = require('./routes/winnerRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const dealsRoutes = require("./routes/dealsRoutes");
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use('/', orderRoutes);
 app.use('/', itemRoutes);
 app.use('/', winnerRoutes);
 app.use('/', adminRoutes);
+app.use('/', dealsRoutes);
 
 app.get('/', (req, res) => {
     res.send('Backend deployed');
