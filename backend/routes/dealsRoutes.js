@@ -4,7 +4,7 @@ const router = express.Router();
 const verifyToken = require('../middleware/verifyToken');
 const dealModel = require('../models/deals');
 
-router.get('/deals', verifyToken, async (req, res) => {
+router.get('/deals', async (req, res) => {
     try {
 
         const { isAdmin } = req.query;
