@@ -3,7 +3,25 @@ const router = express.Router();
 
 const verifyToken = require('../middleware/verifyToken');
 const orderModel = require('../models/order');
+const userModel = require('../models/users');
 const moment = require("moment-timezone");
+
+router.patch('/read-notification', async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        const user = await userModel.findOneAndUpdate(
+            { email: email },           
+            { $set: { notificationRead: true } },
+            { new: true }               
+        );
+        
+        res.status(200).json({ message: 'Notification marked as read', user });
+    } catch (e) {
+        console.error('Error', e);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 
 router.get('/data', verifyToken, async (req, res) => {
     const { date } = req.query;

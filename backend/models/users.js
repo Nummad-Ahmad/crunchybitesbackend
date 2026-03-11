@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
     wins: Number,
     orders: Number,
     isVerified: Boolean,
+    notificationRead: {type: Boolean, default: false},
     verificationCode: String,
 });
 
