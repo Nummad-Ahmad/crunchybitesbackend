@@ -38,7 +38,10 @@ async function declareWinner() {
 
         const winnerUser = await userModel.findOneAndUpdate(
             { email: highestEmail },
-            { $inc: { wins: 1 } },
+            {
+                $inc: { wins: 1 },
+                $set: { notificationRead: false }
+            },
             { new: true }
         );
 
