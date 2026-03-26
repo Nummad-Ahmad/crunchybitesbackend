@@ -33,6 +33,11 @@ router.get('/winners', async (req, res) => {
 
 // Declare winner (only runs if tomorrow is the 1st of the month)
 router.get('/declareWinner', async (req, res) => {
+      const cronToken = req.headers['x-cron-token']; // read secret from headers
+
+  if (cronToken !== process.env.CRON_SECRET) {
+    return res.status(403).json({ error: 'Forbidden' }); // reject unauthorized requests
+  }
     const today = moment().tz("Asia/Karachi");
     const tomorrow = today.clone().add(1, "day");
 
