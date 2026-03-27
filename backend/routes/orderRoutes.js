@@ -83,6 +83,11 @@ router.delete('/deleteOrders', async (req, res) => {
 
 
 router.post('/discount', async (req, res) => {
+    const SECRET = process.env.CRON_SECRET;
+
+if (req.headers['x-cron-token'] !== SECRET) {
+    return res.status(403).json({ message: "Forbidden" });
+}
     const today = moment().tz("Asia/Karachi").date();
 
     const discountMap = {
