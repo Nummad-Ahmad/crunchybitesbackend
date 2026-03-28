@@ -13,29 +13,20 @@ async function declareWinner() {
 
     const startDate = moment(today).startOf("month").toDate();
     const endDate = moment(today).endOf("month").toDate();
-
     try {
-
         const orders = await orderModel.find({
             date: { $gte: startDate, $lte: endDate }
         });
-
         if (orders.length === 0) {
-            console.log("No orders found for this month.");
             return;
         }
-
         const totalByEmail = orders.reduce((acc, { sender, total }) => {
-
             acc[sender] = (acc[sender] || 0) + total;
             return acc;
-
         }, {});
-
         const highestEmail = Object.keys(totalByEmail).reduce((a, b) =>
             totalByEmail[a] > totalByEmail[b] ? a : b
         );
-
         const winnerUser = await userModel.findOneAndUpdate(
             { email: highestEmail },
             {

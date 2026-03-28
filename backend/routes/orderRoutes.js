@@ -61,6 +61,11 @@ router.post('/order', verifyToken, async (req, res) => {
 });
 
 router.delete('/deleteOrders', async (req, res) => {
+       const SECRET = process.env.CRON_SECRET;
+
+if (req.headers['x-cron-token'] !== SECRET) {
+    return res.status(403).json({ message: "Forbidden" });
+}
     try {
 
         const twoMonthsAgo = new Date();
