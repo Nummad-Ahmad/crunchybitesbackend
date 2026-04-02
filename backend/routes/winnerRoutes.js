@@ -42,14 +42,9 @@ router.get('/declareWinner', async (req, res) => {
     const tomorrow = today.clone().add(1, "day");
 
     try {
-        if (tomorrow.date() === 1) {
             await declareWinner();
             console.log("Winner declared successfully!");
             return res.json({ message: "Winner declared successfully!" });
-        } else {
-            console.log("Not the end of the month. Winner not declared.");
-            return res.json({ message: "Today is not the end of the month." });
-        }
     } catch (error) {
         console.error("Error declaring winner:", error);
         return res.status(500).json({ error: "Internal Server Error" });
