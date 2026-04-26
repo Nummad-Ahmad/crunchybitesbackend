@@ -12,6 +12,8 @@ const winnerRoutes = require('./routes/winnerRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const dealsRoutes = require("./routes/dealsRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
+const uploadRoute = require('./routes/upload');
+
 
 const app = express();
 
@@ -29,6 +31,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/', authRoutes);
+app.use('/upload', uploadRoute);
 app.use('/', orderRoutes);
 app.use('/', itemRoutes);
 app.use('/', winnerRoutes);
